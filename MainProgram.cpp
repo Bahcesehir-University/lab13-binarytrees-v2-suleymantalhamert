@@ -1,10 +1,10 @@
 /************************************************************
- CMP2003 – Data Structures
- Lab: Binary Search Tree (BST) – Traversals & Basic Stats
- Student Skeleton (fill the TODOs)
- Time: ~50 minutes
-
- GOAL
+CMP2003 – Data Structures
+Lab: Binary Search Tree (BST) – Traversals & Basic Stats
+Student Skeleton (fill the TODOs)
+Time: ~50 minutes
+ 
+GOAL
   - Implement a Binary Search Tree that supports:
       1) insert(x)
       2) inorderTraversal()
@@ -13,22 +13,22 @@
       5) treeHeight()
       6) treeNodeCount()
       7) treeLeavesCount()
-
- INPUT
+ 
+INPUT
   - User enters integers ending with -999 sentinel.
-
- RULES / NOTES
+ 
+RULES / NOTES
   - Duplicates: insert them into the RIGHT subtree.
   - Height definition for this lab:
       * empty tree => height = 0
       * single node => height = 1
   - Traversal format: print values separated by a single space.
-
+ 
 ************************************************************/
-
+ 
 #include <iostream>
 using namespace std;
-
+ 
 /************************************************************
   BST NODE (template)
 ************************************************************/
@@ -37,11 +37,11 @@ struct nodeType {
     T info;
     nodeType<T>* llink;
     nodeType<T>* rlink;
-
+ 
     nodeType(const T& val)
         : info(val), llink(nullptr), rlink(nullptr) {}
 };
-
+ 
 /************************************************************
   BST CLASS
 ************************************************************/
@@ -50,35 +50,35 @@ class bSearchTreeType {
 public:
     bSearchTreeType() : root(nullptr) {}
     ~bSearchTreeType() { destroy(root); }
-
+ 
     // ======= STUDENT TASKS =======
     void insert(const T& item);         // Task 1
     void inorderTraversal() const;      // Task 2
     void preorderTraversal() const;     // Task 2
     void postorderTraversal() const;    // Task 2
-
+ 
     int treeHeight() const;             // Task 3
     int treeNodeCount() const;          // Task 4
     int treeLeavesCount() const;        // Task 5
-
+ 
 private:
     nodeType<T>* root;
-
+ 
     // recursive helpers
     void insert(nodeType<T>*& p, const T& item);
-
+ 
     void inorder(nodeType<T>* p) const;
     void preorder(nodeType<T>* p) const;
     void postorder(nodeType<T>* p) const;
-
+ 
     int height(nodeType<T>* p) const;
     int nodeCount(nodeType<T>* p) const;
     int leavesCount(nodeType<T>* p) const;
-
+ 
     // given helper
     void destroy(nodeType<T>*& p);
 };
-
+ 
 /************************************************************
   Helper: destroy tree (given)
 ************************************************************/
@@ -91,7 +91,7 @@ void bSearchTreeType<T>::destroy(nodeType<T>*& p) {
         p = nullptr;
     }
 }
-
+ 
 /************************************************************
   Task 1: insert (public wrapper)
 ************************************************************/
@@ -99,9 +99,10 @@ template <class T>
 void bSearchTreeType<T>::insert(const T& item) {
     // TODO:
     // Call the recursive insert helper starting from root.
+    insert(root, item);
     // Example: insert(root, item);
 }
-
+ 
 /************************************************************
   Task 1: insert (recursive)
   Policy:
@@ -112,27 +113,40 @@ template <class T>
 void bSearchTreeType<T>::insert(nodeType<T>*& p, const T& item) {
     // TODO:
     // If p is null, create a new node.
+    if(p == nullptr){
+        p = new nodeType<T>(item);
+        return;
+    }
+    if(item < p->info){
+        insert(p->llink,item);
+    }
+    else{
+        insert(p->rlink,item);
+    }
     // Otherwise, recurse left or right based on BST rules.
 }
-
+ 
 /************************************************************
   Task 2: Traversals (public wrappers)
 ************************************************************/
 template <class T>
 void bSearchTreeType<T>::inorderTraversal() const {
     // TODO: call inorder(root)
+    inorder(root);
 }
-
+ 
 template <class T>
 void bSearchTreeType<T>::preorderTraversal() const {
     // TODO: call preorder(root)
+    preorder(root);
 }
-
+ 
 template <class T>
 void bSearchTreeType<T>::postorderTraversal() const {
     // TODO: call postorder(root)
+    postorder(root);
 }
-
+ 
 /************************************************************
   Task 2: Traversals (recursive)
   inorder:   Left, Root, Right
@@ -143,23 +157,35 @@ template <class T>
 void bSearchTreeType<T>::inorder(nodeType<T>* p) const {
     // TODO:
     // If p is null return
+    if(p == nullptr) return;
+    inorder(p->llink);
+    cout << p->info << " ";
+    inorder(p->rlink);
     // Visit left, print root, visit right
 }
-
+ 
 template <class T>
 void bSearchTreeType<T>::preorder(nodeType<T>* p) const {
     // TODO:
     // If p is null return
+    if(p == nullptr) return;
+    cout << p->info << " ";
+    preorder(p->llink);
+    preorder(p->rlink);
     // Print root, visit left, visit right
 }
-
+ 
 template <class T>
 void bSearchTreeType<T>::postorder(nodeType<T>* p) const {
     // TODO:
     // If p is null return
+    if(p == nullptr) return;
+    postorder(p->llink);
+    postorder(p->rlink);
+    cout << p->info << " ";
     // Visit left, visit right, print root
 }
-
+ 
 /************************************************************
   Task 3: treeHeight
   Height rules:
@@ -169,34 +195,38 @@ void bSearchTreeType<T>::postorder(nodeType<T>* p) const {
 template <class T>
 int bSearchTreeType<T>::treeHeight() const {
     // TODO: return height(root)
-    return 0;
+    return height(root);
 }
-
+ 
 template <class T>
 int bSearchTreeType<T>::height(nodeType<T>* p) const {
     // TODO:
     // If p is null => 0
+    if(p == nullptr) return 0;
     // else => 1 + max(height(left), height(right))
-    return 0;
+    int hl = height(p->llink);
+    int hr = height(p->rlink);
+    return 1 + (hl > hr ? hl : hr);
 }
-
+ 
 /************************************************************
   Task 4: treeNodeCount
 ************************************************************/
 template <class T>
 int bSearchTreeType<T>::treeNodeCount() const {
     // TODO: return nodeCount(root)
-    return 0;
+    return nodeCount(root);
 }
-
+ 
 template <class T>
 int bSearchTreeType<T>::nodeCount(nodeType<T>* p) const {
     // TODO:
     // If p is null => 0
+    if(p ==nullptr) return 0;
+    return 1 + nodeCount(p->llink) + nodeCount(p->rlink);
     // else => 1 + nodeCount(left) + nodeCount(right)
-    return 0;
 }
-
+ 
 /************************************************************
   Task 5: treeLeavesCount
   Leaf = node with no children
@@ -204,50 +234,54 @@ int bSearchTreeType<T>::nodeCount(nodeType<T>* p) const {
 template <class T>
 int bSearchTreeType<T>::treeLeavesCount() const {
     // TODO: return leavesCount(root)
-    return 0;
-}
-
+    return leavesCount(root);
+    }
+ 
 template <class T>
 int bSearchTreeType<T>::leavesCount(nodeType<T>* p) const {
     // TODO:
     // If p is null => 0
+    if(p == nullptr) return 0;
     // If p is leaf => 1
+    if(p->llink == nullptr && p->rlink ==nullptr){
+        return 1;
+    }
     // else => leavesCount(left) + leavesCount(right)
-    return 0;
+    return leavesCount(p->llink) + leavesCount(p->rlink);
 }
-
+ 
 /************************************************************
   MAIN (same behavior as your snippet)
 ************************************************************/
 // Data example:
 // 68 43 10 56 77 82 61 82 33 56 72 66 99 88 12 6 7 21 -999
-
+ 
 int main() {
     bSearchTreeType<int> treeRoot;
-
+ 
     int num;
     cout << "Enter numbers ending with -999" << endl;
     cin >> num;
-
+ 
     while (num != -999) {
         treeRoot.insert(num);
         cin >> num;
     }
-
+ 
     cout << endl << "Tree nodes in inorder: ";
     treeRoot.inorderTraversal();
-
+ 
     cout << endl << "Tree nodes in preorder: ";
     treeRoot.preorderTraversal();
-
+ 
     cout << endl << "Tree nodes in postorder: ";
     treeRoot.postorderTraversal();
     cout << endl;
-
+ 
     cout << "Tree Height: " << treeRoot.treeHeight() << endl;
     cout << "Number of Nodes: " << treeRoot.treeNodeCount() << endl;
     cout << "Number or Leaves: " << treeRoot.treeLeavesCount() << endl;
     cout << endl;
-
+ 
     return 0;
 }
